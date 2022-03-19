@@ -34,6 +34,9 @@ class Order:
     def order_lines(self):
         return self.__order_lines
 
+    def find_by_product_id(self, product_id: UUID):
+        return self.__order_lines[self.__index_of_order_line(product_id)]
+
     def upsert_line(self, product: Product, quantity: int) -> OrderLine:
         if quantity < 1:
             raise ValueError("Order line quantity must be greater than 0")
