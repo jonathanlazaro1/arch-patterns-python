@@ -12,6 +12,20 @@ class Order:
         self.__reference = uuid4()
         self.__order_lines = []
 
+    def __index_of_order_line(self, product_id: UUID):
+        try:
+            return next(x[0] for x in enumerate(self._order_lines) if x[1].product.id == product_id)
+        except StopIteration as ex:
+            raise ValueError(
+                f"No order line found to Product Id {product_id}") from ex
+
+    def __upsert_order_line(self, order_line: OrderLine):
+        try:
+            idx = self._index_of_order_line(order_line.product.id)
+            self._order_lines[idx] = order_line
+        except ValueError:
+            self._order_lines.append(order_line)
+
     @property
     def reference(self):
         return self.__reference
@@ -23,23 +37,12 @@ class Order:
     def upsert_line(self, product: Product, quantity: int) -> OrderLine:
         if quantity < 1:
             raise ValueError("Order line quantity must be greater than 0")
-        (idx, ol) = next((x for x in enumerate(self.__order_lines)
-                          if x[1].product.id == product.id), None)
-        if ol is None:
-            ol = OrderLine(self.__reference, product, quantity)
-            self.__order_lines.append(ol)
-        else:
-            ol.quantity += quantity
-            self.__order_lines[idx] = ol
+        order_line = OrderLine(self.__reference, product, quantity)
+        self.__upsert_order_line(order_line)
 
-        return ol
+        return order_line
 
     def remove_line(self, product_id: UUID) -> OrderLine:
-        try:
-            order_line = next(
-                x for x in self.__order_lines if x.product.id == product_id)
-            self.__order_lines.remove(order_line)
-            return order_line
-        except StopIteration as ex:
-            raise IndexError(
-                f"No product in this Order with Id {product_id}") from ex
+        order_line = self.__order_lines[self.__index_of_order_line(product_id)]
+        self.__order_lines.remove(order_line)
+        return order_line
