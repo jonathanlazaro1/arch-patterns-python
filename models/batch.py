@@ -29,9 +29,6 @@ class Batch:
             raise ValueError(
                 f"No order line found to order reference {order_ref}") from ex
 
-    def find_by_order_ref(self, order_ref: UUID):
-        return self._order_lines[self._index_of_order_line(order_ref)]
-
     def _upsert_order_line(self, order_line: OrderLine):
         try:
             idx = self._index_of_order_line(order_line.order_ref)
@@ -64,6 +61,9 @@ class Batch:
         ols_allocation = reduce(
             lambda a, b: a + b.quantity, self._order_lines, 0)
         return self._quantity - ols_allocation
+
+    def find_by_order_ref(self, order_ref: UUID):
+        return self._order_lines[self._index_of_order_line(order_ref)]
 
     def available_quantity_for_order_line(self, order_ref: UUID):
         try:
