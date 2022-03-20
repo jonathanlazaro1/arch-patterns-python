@@ -1,7 +1,10 @@
 from functools import reduce
 from uuid import uuid4
+
+import pytest
 from models.batch import Batch
 from models.order_line import OrderLine
+from models.product import Product
 from tests.helpers import generate_order_lines
 
 
@@ -27,3 +30,15 @@ def test_if_allocate_order_line_works_as_expected():
         assert order_line.order_ref == order_ref
         assert order_line.product.id == product.id
         assert order_line.quantity == 1
+
+
+@pytest.mark.parametrize("quantity", [-1, 0])
+def test_if_allocate_order_line_with_invalid_quantity_throws(quantity: int):
+    product = Product("Test", "units")
+    batch = Batch(product, 1)
+    order_line = OrderLine(uuid4(), product, quantity)
+
+    with pytest.raises(ValueError) as ex:
+        batch.allocate_order_line(order_line)
+
+    assert str(ex.value) == "Order line quantity must be greater than 0"
