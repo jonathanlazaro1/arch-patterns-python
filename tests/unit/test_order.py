@@ -8,28 +8,21 @@ from models.product import Product
 
 
 def test_if_add_order_line_works_as_expected():
-    product = Product("Test", "units")
     order = Order()
-    quantity = randint(1, 100)
-    added_order_line = order.add_order_line(product, quantity)
+    product_ids: List[UUID] = []
 
-    assert len(order.order_lines) == 1
-    assert added_order_line.product == product
-    assert added_order_line.quantity == quantity
+    for r in range(1, 10):
+        product_id = Product(f"Test {r}", "units")
+        order.add_order_line(product_id, r)
+        product_ids.append(product_id.id)
 
+    assert len(order.order_lines) == len(product_ids)
 
-def test_if_find_order_line_by_product_id_works_as_expected():
-    product = Product("Test", "units")
-    order = Order()
-    quantity = randint(1, 100)
-    order.add_order_line(product, quantity)
-
-    assert len(order.order_lines) == 1
-
-    order_line = order.find_by_product_id(product.id)
-
-    assert order_line.product == product
-    assert order_line.quantity == quantity
+    for r in range(1, len(order.order_lines)):
+        product_id = product_ids[r-1]
+        order_line = order.find_by_product_id(product_id)
+        assert order_line.product.id == product_id
+        assert order_line.quantity == r
 
 
 def test_if_find_order_line_by_product_id_throws_when_not_found():
@@ -70,24 +63,6 @@ def test_if_add_same_product_multiple_times_correctly_updates_it():
         assert added_order_line.product == product
         assert added_order_line.quantity == quantity
         assert len(order.order_lines) == 1
-
-
-def test_if_multiple_order_lines_are_handled_correctly():
-    order = Order()
-    products: List[Product] = []
-
-    for i in range(1, 10):
-        p = Product(f"Test {i}", "units")
-        order.add_order_line(p, i)
-        products.append(p)
-
-    assert len(order.order_lines) == len(products)
-
-    for i in range(1, 10):
-        p = products[i-1]
-        order_line = order.find_by_product_id(p.id)
-        assert order_line.product == p
-        assert order_line.quantity == i
 
 
 def test_if_remove_order_line_works_as_expected():
