@@ -1,5 +1,6 @@
 from random import randint
 from typing import List
+from uuid import UUID
 
 import pytest
 from models.order import Order
@@ -90,22 +91,21 @@ def test_if_multiple_order_lines_are_handled_correctly():
 
 
 def test_if_remove_order_line_works_as_expected():
-    product_1 = Product("Test 1", "units")
-    product_2 = Product("Test 2", "units")
-    quantity_1 = randint(1, 100)
-    quantity_2 = randint(1, 100)
-
     order = Order()
-    order.add_order_line(product_1, quantity_1)
-    order.add_order_line(product_2, quantity_2)
+    product_ids: List[UUID] = []
 
-    assert len(order.order_lines) == 2
+    for i in range(1, 10):
+        p = Product(f"Test {i}", "units")
+        order.add_order_line(p, i)
+        product_ids.append(p.id)
 
-    removed_order_line = order.remove_order_line(product_1.id)
+    for r in range(len(order.order_lines) - 1, 0):
+        product_id = product_ids[r]
+        order_line = order.remove_order_line(product_id)
 
-    assert len(order.order_lines) == 1
-    assert removed_order_line.product == product_1
-    assert removed_order_line.quantity == quantity_1
+        assert order_line.product.id == product_id
+        assert order_line.quantity == r+1
+        assert len(order.order_lines) == r
 
 
 def test_if_remove_order_line_throws_when_not_found():
