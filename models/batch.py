@@ -14,7 +14,7 @@ class Batch:
     __order_lines: List[OrderLine]
     __quantity: int
 
-    def __init__(self, product: Product, quantity: int, utc_eta: Optional[datetime]):
+    def __init__(self, product: Product, quantity: int, utc_eta: Optional[datetime] = None):
         self.__reference = uuid4()
         self.__order_lines = []
         self.__product = product
