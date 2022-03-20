@@ -10,3 +10,6 @@ setup:
 
 dev-setup:
 	pip-sync requirements-dev.txt requirements.txt
+
+test:
+	pytest tests/unit
