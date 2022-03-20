@@ -1,4 +1,3 @@
-from random import randint
 from typing import List
 from uuid import UUID
 
@@ -54,8 +53,7 @@ def test_if_find_order_line_by_product_id_throws_when_not_found():
     product_2 = Product("Test 2", "units")
 
     order = Order()
-    quantity = randint(1, 100)
-    order.add_order_line(product_1, quantity)
+    order.add_order_line(product_1, 1)
 
     assert len(order.order_lines) == 1
 
@@ -88,8 +86,7 @@ def test_if_remove_order_line_throws_when_not_found():
     product_2 = Product("Test 2", "units")
 
     order = Order()
-    quantity = randint(1, 100)
-    order.add_order_line(product_1, quantity)
+    order.add_order_line(product_1, 1)
 
     assert len(order.order_lines) == 1
 
