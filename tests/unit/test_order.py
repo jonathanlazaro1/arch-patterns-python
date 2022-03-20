@@ -25,22 +25,6 @@ def test_if_add_order_line_works_as_expected():
         assert order_line.quantity == r
 
 
-def test_if_find_order_line_by_product_id_throws_when_not_found():
-    product_1 = Product("Test 1", "units")
-    product_2 = Product("Test 2", "units")
-
-    order = Order()
-    quantity = randint(1, 100)
-    order.add_order_line(product_1, quantity)
-
-    assert len(order.order_lines) == 1
-
-    with pytest.raises(ValueError) as ex:
-        order.find_by_product_id(product_2.id)
-
-    assert str(ex.value) == f"No order line found to Product Id {product_2.id}"
-
-
 @pytest.mark.parametrize("quantity", [-1, 0])
 def test_if_add_order_line_with_invalid_quantity_throws(quantity: int):
     product = Product("Test", "units")
@@ -63,6 +47,22 @@ def test_if_add_same_product_multiple_times_correctly_updates_it():
         assert added_order_line.product == product
         assert added_order_line.quantity == quantity
         assert len(order.order_lines) == 1
+
+
+def test_if_find_order_line_by_product_id_throws_when_not_found():
+    product_1 = Product("Test 1", "units")
+    product_2 = Product("Test 2", "units")
+
+    order = Order()
+    quantity = randint(1, 100)
+    order.add_order_line(product_1, quantity)
+
+    assert len(order.order_lines) == 1
+
+    with pytest.raises(ValueError) as ex:
+        order.find_by_product_id(product_2.id)
+
+    assert str(ex.value) == f"No order line found to Product Id {product_2.id}"
 
 
 def test_if_remove_order_line_works_as_expected():
