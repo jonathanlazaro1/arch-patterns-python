@@ -25,7 +25,7 @@ def test_if_add_order_line_works_as_expected():
 
 
 @pytest.mark.parametrize("quantity", [-1, 0])
-def test_if_add_order_line_with_invalid_quantity_throws(quantity: int):
+def test_if_add_order_line_with_invalid_quantity_raises(quantity: int):
     product = Product("Test", "units")
     order = Order()
 
@@ -48,7 +48,7 @@ def test_if_add_same_product_multiple_times_correctly_updates_it():
         assert len(order.order_lines) == 1
 
 
-def test_if_find_order_line_by_product_id_throws_when_not_found():
+def test_if_find_order_line_by_product_id_raises_when_not_found():
     product_1 = Product("Test 1", "units")
     product_2 = Product("Test 2", "units")
 
@@ -81,7 +81,7 @@ def test_if_remove_order_line_works_as_expected():
         assert len(order.order_lines) == r
 
 
-def test_if_remove_order_line_throws_when_not_found():
+def test_if_remove_order_line_raises_when_not_found():
     product_1 = Product("Test 1", "units")
     product_2 = Product("Test 2", "units")
 

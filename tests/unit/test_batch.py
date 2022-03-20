@@ -33,7 +33,7 @@ def test_if_allocate_order_line_works_as_expected():
 
 
 @pytest.mark.parametrize("quantity", [-1, 0])
-def test_if_allocate_order_line_with_invalid_quantity_throws(quantity: int):
+def test_if_allocate_order_line_with_invalid_quantity_raises(quantity: int):
     product = Product("Test", "units")
     batch = Batch(product, 1)
     order_line = OrderLine(uuid4(), product, quantity)
@@ -59,7 +59,7 @@ def test_if_add_same_order_line_multiple_times_correctly_updates_it_while_preser
         assert batch.available_quantity == 10 - (r+1)
 
 
-def test_if_add_order_line_above_available_quantity_throws():
+def test_if_add_order_line_above_available_quantity_raises():
     product = Product("Test", "units")
     order_line_1 = OrderLine(uuid4(), product, 2)
     order_line_2 = OrderLine(uuid4(), product, 1)
@@ -77,7 +77,7 @@ def test_if_add_order_line_above_available_quantity_throws():
         ex.value) == "No available quantity in this batch to allocate this order line"
 
 
-def test_if_add_order_line_with_different_product_from_batch_throws():
+def test_if_add_order_line_with_different_product_from_batch_raises():
     product_1 = Product("Test 1", "units")
     product_2 = Product("Test 2", "units")
 
@@ -90,7 +90,7 @@ def test_if_add_order_line_with_different_product_from_batch_throws():
     assert str(ex.value) == "Order line must be from the same product as batch"
 
 
-def test_if_find_order_line_by_order_ref_throws_when_not_found():
+def test_if_find_order_line_by_order_ref_raises_when_not_found():
     product = Product("Test", "units")
     order_line_1 = OrderLine(uuid4(), product, 1)
     order_line_2 = OrderLine(uuid4(), product, 1)
@@ -128,7 +128,7 @@ def test_if_remove_order_line_works_as_expected():
         assert batch.available_quantity == 0 + (r+1)
 
 
-def test_if_remove_order_line_throws_when_not_found():
+def test_if_remove_order_line_raises_when_not_found():
     product = Product("Test", "units")
     order_line_1 = OrderLine(uuid4(), product, 1)
     order_line_2 = OrderLine(uuid4(), product, 1)
