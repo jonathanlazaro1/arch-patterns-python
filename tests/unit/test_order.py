@@ -12,6 +12,7 @@ def test_if_add_order_line_works_as_expected():
     quantity = randint(1, 100)
     added_order_line = order.add_order_line(product, quantity)
 
+    assert len(order.order_lines) == 1
     assert added_order_line.product == product
     assert added_order_line.quantity == quantity
 
