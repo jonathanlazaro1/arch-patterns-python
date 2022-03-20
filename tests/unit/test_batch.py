@@ -13,9 +13,9 @@ def test_if_allocate_order_line_works_as_expected():
     assert batch.product == product
 
     order_refs: List[UUID] = []
-    for r in range(1, 10):
+    for r in range(0, 10):
         order_ref = uuid4()
-        order_line = OrderLine(order_ref, product, r)
+        order_line = OrderLine(order_ref, product, r+1)
         batch.allocate_order_line(order_line)
         order_refs.append(order_ref)
 
