@@ -14,17 +14,17 @@ class Order:
 
     def __index_of_order_line(self, product_id: UUID):
         try:
-            return next(x[0] for x in enumerate(self._order_lines) if x[1].product.id == product_id)
+            return next(x[0] for x in enumerate(self.__order_lines) if x[1].product.id == product_id)
         except StopIteration as ex:
             raise ValueError(
                 f"No order line found to Product Id {product_id}") from ex
 
     def __upsert_order_line(self, order_line: OrderLine):
         try:
-            idx = self._index_of_order_line(order_line.product.id)
-            self._order_lines[idx] = order_line
+            idx = self.__index_of_order_line(order_line.product.id)
+            self.__order_lines[idx] = order_line
         except ValueError:
-            self._order_lines.append(order_line)
+            self.__order_lines.append(order_line)
 
     @property
     def reference(self):
