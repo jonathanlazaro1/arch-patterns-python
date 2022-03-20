@@ -1,28 +1,23 @@
-from random import randint
-from typing import List
-from uuid import UUID, uuid4
+from functools import reduce
+from uuid import uuid4
 from models.batch import Batch
 from models.order_line import OrderLine
-from tests.helpers import generate_products
+from tests.helpers import generate_order_lines
 
 
 def test_if_allocate_order_line_works_as_expected():
-    product = generate_products()[0]
+    product = Product("Test", "units")
     batch_quantity = 100
     batch = Batch(product, batch_quantity)
 
     assert batch.product == product
 
-    order_refs: List[UUID] = []
-    allocated_quantity = 0
-    for r in range(0, 10):
-        order_ref = uuid4()
-        order_line = OrderLine(order_ref, product, r+1)
-        batch.allocate_order_line(order_line)
-        order_refs.append(order_ref)
-        allocated_quantity += r+1
+    order_lines = generate_order_lines(10, product)
+    order_refs = [ol.order_ref for ol in order_lines]
+    [batch.allocate_order_line(ol) for ol in order_lines]
 
     assert len(batch.order_lines) == len(order_refs)
+    allocated_quantity = reduce(lambda a, b: a + b.quantity, order_lines, 0)
     assert batch.available_quantity == batch_quantity - allocated_quantity
 
     for r in range(0, len(batch.order_lines)):
@@ -31,4 +26,4 @@ def test_if_allocate_order_line_works_as_expected():
 
         assert order_line.order_ref == order_ref
         assert order_line.product.id == product.id
-        assert order_line.quantity == r+1
+        assert order_line.quantity == 1
