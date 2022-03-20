@@ -1,4 +1,6 @@
 from random import randint
+
+import pytest
 from models.order import Order
 from models.product import Product
 
@@ -16,3 +18,14 @@ def test_if_add_order_line_works_as_expected():
 
     assert fetched_order_line.product == product
     assert fetched_order_line.quantity == quantity
+
+
+@pytest.mark.parametrize("quantity", [-1, 0])
+def test_if_add_order_line_with_invalid_quantity_throws(quantity: int):
+    product = Product("Test", "units")
+    order = Order()
+
+    with pytest.raises(ValueError) as ex:
+        order.add_order_line(product, quantity)
+
+    assert str(ex.value) == "Order line quantity must be greater than 0"
