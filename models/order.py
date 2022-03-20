@@ -37,7 +37,7 @@ class Order:
     def find_by_product_id(self, product_id: UUID):
         return self.__order_lines[self.__index_of_order_line(product_id)]
 
-    def upsert_line(self, product: Product, quantity: int) -> OrderLine:
+    def add_order_line(self, product: Product, quantity: int) -> OrderLine:
         if quantity < 1:
             raise ValueError("Order line quantity must be greater than 0")
         order_line = OrderLine(self.__reference, product, quantity)
@@ -45,7 +45,7 @@ class Order:
 
         return order_line
 
-    def remove_line(self, product_id: UUID) -> OrderLine:
+    def remove_order_line(self, product_id: UUID) -> OrderLine:
         order_line = self.__order_lines[self.__index_of_order_line(product_id)]
         self.__order_lines.remove(order_line)
         return order_line
