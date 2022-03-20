@@ -40,12 +40,12 @@ def test_if_add_same_product_multiple_times_correctly_updates_it():
     product = Product("Test", "units")
     order = Order()
 
-    for _ in range(1, 10):
-        quantity = randint(1, 100)
-        added_order_line = order.add_order_line(product, quantity)
+    for r in range(1, 10):
+        order.add_order_line(product, r)
+        added_order_line = order.find_by_product_id(product.id)
 
         assert added_order_line.product == product
-        assert added_order_line.quantity == quantity
+        assert added_order_line.quantity == r
         assert len(order.order_lines) == 1
 
 
