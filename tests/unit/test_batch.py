@@ -77,6 +77,24 @@ def test_if_add_order_line_above_available_quantity_raises():
         ex.value) == "No available quantity in this batch to allocate this order line"
 
 
+def test_if_already_allocated_order_line_raises_when_above_available_quantity():
+    product = Product("Test", "units")
+    order_line_1 = OrderLine(uuid4(), product, 2)
+
+    batch = Batch(product, order_line_1.quantity)
+
+    batch.allocate_order_line(order_line_1)
+    assert len(batch.order_lines) == 1
+    assert batch.available_quantity == 0
+
+    order_line_1.quantity = 3
+    with pytest.raises(ValueError) as ex:
+        batch.allocate_order_line(order_line_1)
+
+    assert str(
+        ex.value) == "No available quantity in this batch to allocate this order line"
+
+
 def test_if_add_order_line_with_different_product_from_batch_raises():
     product_1 = Product("Test 1", "units")
     product_2 = Product("Test 2", "units")
