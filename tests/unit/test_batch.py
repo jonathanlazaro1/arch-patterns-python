@@ -44,7 +44,7 @@ def test_if_allocate_order_line_with_invalid_quantity_raises(quantity: int):
     assert str(ex.value) == "Order line quantity must be greater than 0"
 
 
-def test_if_add_same_order_line_multiple_times_correctly_updates_it_while_preserving_quantities():
+def test_if_allocate_same_order_line_multiple_times_correctly_updates_it_while_preserving_quantities():
     product = Product("Test", "units")
     batch = Batch(product, 10)
     order_line = OrderLine(uuid4(), product, 1)
@@ -59,7 +59,7 @@ def test_if_add_same_order_line_multiple_times_correctly_updates_it_while_preser
         assert batch.available_quantity == 10 - (r+1)
 
 
-def test_if_add_order_line_above_available_quantity_raises():
+def test_if_allocate_new_order_line_above_available_quantity_raises():
     product = Product("Test", "units")
     order_line_1 = OrderLine(uuid4(), product, 2)
     order_line_2 = OrderLine(uuid4(), product, 1)
@@ -95,7 +95,7 @@ def test_if_already_allocated_order_line_raises_when_above_available_quantity():
         ex.value) == "No available quantity in this batch to allocate this order line"
 
 
-def test_if_add_order_line_with_different_product_from_batch_raises():
+def test_if_allocate_order_line_with_different_product_from_batch_raises():
     product_1 = Product("Test 1", "units")
     product_2 = Product("Test 2", "units")
 
