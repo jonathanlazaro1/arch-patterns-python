@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import reduce
 from uuid import uuid4
 
@@ -6,6 +7,7 @@ from models.batch import Batch
 from models.order_line import OrderLine
 from models.product import Product
 from tests.helpers import generate_order_lines
+from utils.datetime import make_timezone_aware_datetime
 
 
 def test_if_allocate_order_line_works_as_expected():
@@ -106,6 +108,22 @@ def test_if_allocate_order_line_with_different_product_from_batch_raises():
         batch.allocate_order_line(order_line)
 
     assert str(ex.value) == "Order line must be from the same product as batch"
+
+
+def test_if_eta_works_as_expected():
+    utcnow = datetime.utcnow()
+    tz_utcnow = make_timezone_aware_datetime(utcnow)
+
+    product = Product("Test 1", "units")
+    batch = Batch(product, 1, utcnow)
+
+    assert batch.eta == tz_utcnow
+    assert batch.is_in_stock == False
+
+    batch.mark_as_shipped()
+
+    assert batch.eta is None
+    assert batch.is_in_stock == True
 
 
 def test_if_find_order_line_by_order_ref_raises_when_not_found():
