@@ -19,8 +19,8 @@ class Batch:
         self.__order_lines = []
         self.__product = product
         self.__quantity = quantity
-        if utc_eta:
-            self.__eta = make_timezone_aware_datetime(utc_eta)
+        self.__eta = None if not utc_eta else make_timezone_aware_datetime(
+            utc_eta)
 
     def __index_of_order_line(self, order_ref: UUID):
         try:
