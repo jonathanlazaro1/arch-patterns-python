@@ -24,13 +24,6 @@ class Stock:
             raise ValueError(
                 f"No batch found to reference {reference}") from ex
 
-    def __index_of_batch_by_product(self, product_id: UUID):
-        try:
-            return next(x[0] for x in enumerate(self.__batches) if x[1].product.id == product_id)
-        except StopIteration as ex:
-            raise ValueError(
-                f"No batch found containing product Id {product_id}") from ex
-
     def __find_batch_by_order_line(self, order_ref: UUID):
         for batch in self.__batches:
             try:
@@ -45,9 +38,6 @@ class Stock:
 
     def find_batch_by_reference(self, reference: UUID):
         return self.__batches[self.__index_of_batch(reference)]
-
-    def find_batch_by_product(self, product_id: UUID):
-        return self.__batches[self.__index_of_batch_by_product(product_id)]
 
     def find_product_availability(self, product_id: UUID) -> int:
         batches = [x for x in self.__batches if x.product.id == product_id]
