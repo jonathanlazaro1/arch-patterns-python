@@ -53,7 +53,7 @@ class Stock:
         batches = [x for x in self.__batches if x.product.id == product_id]
         return reduce(lambda a, b: a + b.available_quantity, batches, 0)
 
-    def create_batch(self, product: Product, quantity: int, utc_eta: Optional[datetime]):
+    def create_batch(self, product: Product, quantity: int, utc_eta: Optional[datetime] = None):
         batch = Batch(product, quantity, utc_eta)
         self.__batches.append(batch)
         return batch
