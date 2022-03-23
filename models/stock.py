@@ -36,6 +36,10 @@ class Stock:
     def __update_batch(self, batch: Batch):
         self.__batches[self.__index_of_batch(batch.reference)] = batch
 
+    @property
+    def batches(self):
+        return self.__batches
+
     def find_batch_by_reference(self, reference: UUID):
         return self.__batches[self.__index_of_batch(reference)]
 
